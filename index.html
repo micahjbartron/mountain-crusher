@@ -1,0 +1,68 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header calss="container-fluid d-flex">
+    <div class="row text-center text-light bg-primary">
+      <div class="col-12">
+        <h1>Mountain Crusher</h1>
+      </div>
+    </div>
+  </header>
+  <main class="container-fluid d-flex">
+    <div class="row mt-2">
+      <div class="col-md-4 col-12">
+        <H2>STATS</H2>
+        <H3>Runs Crushed per Day multiplier: 0</H3>
+        <h3 id="total">Total Runs Crushed: 0</h3>
+      </div>
+      <div class="col-md-4 col-12 text-center ">
+        <img onclick="crush()" src="//placehold.it/200x300" alt="cool pic">
+      </div>
+      <div class="col-md-4 col-12">
+        <h2>INVENTORY</h2>
+
+        <h4 id="boards">Boards: 0</h4>
+        <h4 id="goggles">Goggles: 0</h4>
+        <h4>Energy Drink: 0</h4>
+        <h4>Friends: 0</h4>
+      </div>
+    </div>
+  </main>
+  <footer class="container-fluid">
+    <div class="row">
+      <div class="col-md-6 col-12">
+        <h4>Store</h4>
+      </div>
+      <div class="col-md-6 col-12"></div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-12">
+        <div class="card w-75">
+          <div class="card-body">
+            <h5 class="card-title">Things to purchase</h5>
+            <div>
+              <button onclick="buySnowboard()" class="btn btn-primary">Boards $</button>
+              <button onclick="buyGoggles()" class="btn btn-primary">Goggles $</button>
+              <!-- <button onclick="multiplier()" class="btn btn-primary">Energy $</button> -->
+              <button onclick="collectAutoUpgrades()" class="btn btn-primary">Friends $</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-mc-6 col-12"></div>
+    </div>
+    </div>
+  </footer>
+  <script src="app.js"></script>
+</body>
+
+</html>
