@@ -1,109 +1,155 @@
 let crushed = {
   amount: 0,
   multiplier: 1,
-  autoCrush: []
 }
 
 let clickUpgrades = {
   snowboard: {
-    price: 5,
+    price: 50,
     quantity: 0,
-    multiplyer: 3
+    multiplier: 10,
+    display: "Boards"
   },
   goggles: {
-    price: 5,
+    price: 15,
     quantity: 0,
-    multiplier: 2
+    multiplier: 5,
+    display: "Goggles"
   },
   energyDrink: {
     price: 5,
     quantity: 0,
-    multiplier: 10
+    multiplier: 3,
+    display: "Energy Drinks"
   }
 }
 
 let automaticUpgrades = {
   friends: {
-    price: 500,
+    price: 200,
     quantity: 0,
-    multiplier: 20
-  },
-
-};
-let clickAdd = 1
-
-function crush() {
-  crushed.amount += clickAdd
-  updateCrushTotal()
+    multiplier: 20,
+    //button: document.getElementById("buy-friends"),
+    display: "Friends"
+  }
 }
 
-function updateCrushTotal() {
+
+for (const keys of Object.keys(clickUpgrades)) {
+  console.log(keys + " multiplier " + clickUpgrades[keys].multiplier)
+  //   console.log(keys)
+}
+
+function updateTotals() {
+  for (const key of Object.keys(clickUpgrades)) {
+    //console.log(key + "multiplier" + clickUpgrades[key].multiplier);
+
+    let invTemplate = " "
+    invTemplate += `
+    <h4 id="${key}">${clickUpgrades[key].display}: ${clickUpgrades[key].quantity}</h4>
+  `
+    document.getElementById(key).innerHTML = invTemplate
+    //console.log(key + "-price")
+    document.getElementById(key + "-price").innerHTML = "= " + clickUpgrades[key].price
+  }
+
+  for (const key of Object.keys(automaticUpgrades)) {
+    let invTemplate = " "
+    invTemplate += `
+    <h4 id="${key}">${automaticUpgrades[key].display}: ${automaticUpgrades[key].quantity}</h4>
+  `
+    document.getElementById(key).innerHTML = invTemplate
+    document.getElementById(key + "-price").innerHTML = "= " + automaticUpgrades[key].price
+  }
 
   let template = " "
   template += `
-<h3 id="total">Total Runs Crushed:${crushed}</h3>
+<h3 id="total">Total Runs Crushed:${crushed.amount}</h3>
 `
   document.getElementById("total").innerHTML = template
+
+  template = " "
+  template += `
+<h3 id="multiplier">Runs Crushed per Day Multiplier: ${crushed.multiplier}</h3>
+`
+  document.getElementById("multiplier").innerHTML = template
+
+
+
+}
+
+function buyAuto(upgrade) {
+  crushed.amount -= automaticUpgrades.upgrade.price;
+  //crushed.amount -= automaticUpgrades[upgrade].price;
+  automaticUpgrades[upgrade].quantity += 1
+  automaticUpgrades[upgrade].price *= 2
+  updateTotals()
+  updateButtons()
 }
 
 
 
-function buySnowboard() {
-  for (let i = 0; )
-    if (crushed.amount >= clickUpgrades.snowboard.price) {
-      clickUpgrades.snowboard.quantity++
+function buy(upgrade) {
+  //console.log("purchased " + upgrade)
 
-      clickUpgrades.snowboard.price *= 2
-      //console.log("purchased")
-      clickAdd += clickUpgrades.snowboard.multiplyer
-      //figure out how to subtract from our total runs crushed
-      //crushed -= clickUpgrades.snowboard.price
-    }
-  updateCrushTotal()
-  updateSnowboardInventoryTotal()
+  crushed.amount -= clickUpgrades[upgrade].price;
+  clickUpgrades[upgrade].quantity += 1
+  clickUpgrades[upgrade].price *= 2
 
-}
-
-function buyGoggles() {
-  if (crushed >= clickUpgrades.goggles.price) {
-    clickUpgrades.goggles.quantity++
-
-    clickUpgrades.goggles.price *= 2
-    console.log("purchased")
-    clickAdd += clickUpgrades.goggles.multiplyer
-    //figure out how to subtract from our total runs crushed
-    //crushed -= clickUpgrades.snowboard.price
+  crushed.multiplier = 0
+  for (const key of Object.keys(clickUpgrades)) {
+    //console.log(crushed.multiplier)
+    //console.log(key + " multiplier " + clickUpgrades[key].multiplier)
+    //console.log(key + " quantity " + clickUpgrades[key].quantity)
+    crushed.multiplier += clickUpgrades[key].multiplier * clickUpgrades[key].quantity
+    //console.log(crushed.multiplier)
   }
-  updateCrushTotal()
-  updateGogglesInventoryTotal()
-
+  updateTotals()
+  updateButtons()
 }
 
+function updateButtons() {
+  for (const key of Object.keys(clickUpgrades)) {
+    if (clickUpgrades[key].price <= crushed.amount) {
+      document.getElementById("buy-" + key).disabled = false;
+    } else {
+      //console.log("buy-" + key + " Disabled")
+      document.getElementById("buy-" + key).disabled = true;
 
+    }
 
+  }
 
-function drawStore(purchasePrice) {
-  let template = " "
-  template += `
-  
-  `
+  for (const key of Object.keys(automaticUpgrades)) {
+    if (automaticUpgrades[key].price <= crushed.amount) {
+      document.getElementById("buy-" + key).disabled = false;
+
+    } else {
+      document.getElementById("buy-" + key).disabled = true;
+
+    }
+  }
 }
 
+function crush() {
+  crushed.amount += crushed.multiplier;
+  //console.log("clicked");
 
-function updateSnowboardInventoryTotal() {
-  let template = " "
-  template += `
-  <h4 id="boards">Boards: ${clickUpgrades.snowboard.quantity}</h4>
-  `
-  document.getElementById("boards").innerHTML = template
-
-
+  updateTotals()
+  updateButtons()
 }
 
-function updateGogglesInventoryTotal() {
-  let template = " "
-  template += `
-  <h4 id="goggles">Goggles: ${clickUpgrades.goggles.quantity}</h4>
-  `
-  document.getElementById("goggles").innerHTML = template
+function collectAutoUpgrades() {
+  crushed.amount += automaticUpgrades.friends.multiplier * automaticUpgrades.friends.quantity;
+
+  updateTotals()
+  updateButtons()
 }
+
+function startInterval() {
+  collectionInterval = setInterval(collectAutoUpgrades, 3000);
+}
+
+updateButtons();
+updateTotals();
+//startInterval();
